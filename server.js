@@ -53,7 +53,15 @@ const requestListener = (req, res) => {
     }else if(req.url=='/todos' && req.method == 'OPTIONS') {
         res.writeHead(200,headers);
         res.end();
-    } else if (req.url.startsWith('/todos/') && req.method == 'PATCH') {
+    } else if(req.url=='/todos' && req.method == 'DELETE') {
+        todos.length = 0;
+        res.writeHead(200,headers);
+        res.write(JSON.stringify({
+            "status": "success",
+            "data": todos,
+        }));
+        res.end();
+    }else if (req.url.startsWith('/todos/') && req.method == 'PATCH') {
         req.on('end',()=>{
             try{
                 const todo  = JSON.parse(body).title;
@@ -74,7 +82,7 @@ const requestListener = (req, res) => {
                 errHandle(res);
             }
         })
-    }else if (req.url.startsWith("/todos/") && req.method == "DELETE"){
+    }else if (req.url.startsWith("/todos") && req.method == "DELETE"){
         const id = req.url.split('/').pop();
         const index = todos.findIndex(element => element.id == id);
         console.log(id, index)
